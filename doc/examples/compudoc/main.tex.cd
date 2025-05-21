@@ -1,0 +1,38 @@
+\documentclass[]{article}
+
+\usepackage{siunitx}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{fullpage}
+
+\author{C.D. Clark III}
+\title{On...}
+
+\begin{document}
+\maketitle
+An equation with a var...
+
+% {{{
+% from show_your_work.expressions import Expression
+% line_ex = Expression("\mathit{m}\mathit{x} + \mathit{b}")
+% }}}
+$$
+y = {{ line_ex.latex }}
+$$
+This gives the relationship between a dependent variable $y$ on an independent variable $x$.
+% {{{
+% slope = 3
+% y_intercept = 2
+% val = 10
+% }}}
+For example, for a slope $m = {{slope}}$ and y-intercept $b = {{y_intercept}}$, the value for $y$ at $x = {{val}}$ would be
+% {{{
+% line_ex.add_sub('m',slope)
+% line_ex.add_sub('b',y_intercept)
+% line_ex.add_sub('x',val)
+% }}}
+$$
+y = {{ line_ex.sub_latex() }} = {{line_ex.eval() }}.
+$$
+
+\end{document}

@@ -1,0 +1,9 @@
+list:
+  just --list
+
+build:
+  uv run compudoc main.tex.cd
+  latexmk main
+
+view:
+  zathura main.pdf &
