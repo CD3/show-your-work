@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "antlr4-python3-runtime==4.11",
+    "latexify-py>=0.4.4",
     "sympy>=1.14.0",
 ]
 authors = [

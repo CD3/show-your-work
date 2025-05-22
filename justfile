@@ -2,4 +2,4 @@ list:
   just --list
 
 test:
-  uv run pytest
+  uv run pytest -s
