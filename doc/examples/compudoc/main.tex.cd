@@ -6,11 +6,10 @@
 \usepackage{fullpage}
 
 \author{C.D. Clark III}
-\title{On...}
+\title{show-your-work/compudoc example}
 
 \begin{document}
 \maketitle
-An equation with a var...
 
 % {{{
 % from show_your_work import Expression, Equation

@@ -7,6 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
     "antlr4-python3-runtime==4.11",
     "latexify-py>=0.4.4",
+    "pint>=0.24.4",
+    "pyparsing>=3.2.3",
     "sympy>=1.14.0",
 ]
 authors = [

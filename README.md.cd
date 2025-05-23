@@ -1,0 +1,39 @@
+# Show your work!
+
+`show-your-work` is a Python module to help with writing solutions to physics problems with numerical answers.
+It relies on other modules to do most of the heavy lifting.
+
+<!-- {{{ -->
+<!-- import pathlib -->
+<!-- def include_filter(filename): -->
+<!--   return pathlib.Path(filename).read_text() -->
+<!-- -->
+<!-- jinja2_env.filters['include'] = include_filter -->
+<!-- }}} -->
+
+## Motivation
+
+When writing detailed example problems for a physics class, we often need to plug numerical values into an equation
+and compute a numerical result. `show-your-work` allows you to write an equation in latex, add numerical substitutions for
+each term in the equations, produce the latex of your equation with numerical values substituted in, and then evaluate
+the equation with the given numerical values.
+
+It is especially handy when used with tools like [compudoc](https://github.com/CD3/compudoc).
+
+From the `doc/examples` directory
+
+
+```latex
+% main.tex.cd
+{{"doc/examples/compudoc/main.tex.cd" | include}}
+```
+
+This template file can be rendered to LaTeX with `compudoc` and then compiled to a PDF with `latexmk`:
+
+```bash
+$ compudoc main.tex.cd
+$ latexmk main
+```
+
+which will give [this PDF](./doc/examples/compudoc/main.pdf)
+

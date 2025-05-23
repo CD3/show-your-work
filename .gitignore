@@ -8,9 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Other
 doc/examples/compudoc/main.aux
 doc/examples/compudoc/main.fdb_latexmk
 doc/examples/compudoc/main.fls
 doc/examples/compudoc/main.log
-doc/examples/compudoc/main.pdf
 uv.lock
