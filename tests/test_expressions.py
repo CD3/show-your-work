@@ -33,7 +33,7 @@ def test_simple_expression_with_no_units_in_subs_but_units_in_result():
     expr = Expression(r"\v{m}\v{x} + \v{b}", "m")
 
     assert expr.latex == "mx + b"
-    assert expr.latex_with_units == r"mx + b \si[]{\meter}"
+    assert expr.latex_with_units == r"mx + b \,\si[]{\meter}"
     assert expr.latex_with_substitutions == "mx + b"
 
     expr.add_substitution("m", 10)

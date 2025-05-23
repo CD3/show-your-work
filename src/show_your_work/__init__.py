@@ -111,7 +111,7 @@ class Expression:
 
     @property
     def latex_with_units(self):
-        return self.latex + " " + self.latex_unit
+        return self.latex + r" \," + self.latex_unit
 
     @property
     def latex_with_substitutions(self):

@@ -8,7 +8,7 @@ Q_ = ureg.Quantity
 from show_your_work import Equation
 
 
-def test_simple_equation_with_units():
+def test_simple_equation_without_units():
     eq = Equation(r"\v{x(t)} = \v{v}\v{t} + \v{x_0}")
 
     assert eq.latex == "x(t) = vt + x_0"
