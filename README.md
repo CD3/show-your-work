@@ -4,6 +4,17 @@
 It relies on other modules to do most of the heavy lifting.
 
 
+## Installing
+
+Show-your-work is available on PyPi. The package is named `show-your-work-utils` to avoid potential name conflicts.
+Install it with your favorite package manager (mine is `uv`).
+```bash
+$ pip install show-your-work-utils
+$ uv add show-your-work-utils
+$ rye add show-your-work-utils
+$ poetry add show-your-work-utils
+```
+
 ## Motivation
 
 When writing detailed example problems for a physics class, we often need to plug numerical values into an equation
