@@ -132,7 +132,7 @@ class Expression:
         )
         return expr
 
-    def eval(self, Q_=None):
+    def eval(self, Q_=None, no_unit_conversions=False):
         """
         Evaluate an expression.
 
@@ -156,6 +156,9 @@ class Expression:
         and y = 2,000 will be passed to sympy for the valuation, which will return 20,000,000, which
         is taken to be in meter. The result is then converted to 20,000 km.
 
+        If no_unit_conversions is True, then quantities will NOT be converted and the current magnitude
+        of the quantity will be used.
+
         Currently _NO_ dimensional analysis...
         """
         sympy_subs = {}
@@ -168,7 +171,8 @@ class Expression:
             val = self.__subs[name]
             if hasattr(val, "magnitude") and hasattr(val, "units"):
                 # convert all quantities to base units.
-                val = val.to_base_units()
+                if not no_unit_conversions:
+                    val = val.to_base_units()
                 val = val.magnitude
             sympy_subs[sympy_name] = val
 
@@ -181,9 +185,12 @@ class Expression:
                 raise RuntimeError(
                     "A quantity class must be passed as an argument to `evel(...)` function if the expression has units.\ni.e.\n\nimport pint\nureg = pint.UnitRegistry()\nQ_ = ureg.Quanttity\n...\nexpression.eval(Q_)\n\n"
                 )
-            # get the results units in base units
-            base_units = Q_(1, self.__units).to_base_units().units
-            val = Q_(val, base_units).to(self.__units)
+            if not no_unit_conversions:
+                # get the results units in base units
+                base_units = Q_(1, self.__units).to_base_units().units
+                val = Q_(val, base_units).to(self.__units)
+            else:
+                val = Q_(val, self.__units)
             return val
 
     @property
