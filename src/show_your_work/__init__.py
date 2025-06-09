@@ -194,8 +194,8 @@ class Expression:
             return val
 
     @property
-    def symbols(self):
-        pass
+    def variables(self):
+        return list(self.__sympy_var_name_mapping.keys())
 
 
 class Equation:
@@ -207,10 +207,11 @@ class Equation:
     LHS = RHS
     """
 
-    def __init__(self, text, units=None):
+    def __init__(self, text, units=None, variable_tag="v"):
         lhs_text, rhs_text = text.split("=")
-        self.__lhs_expr = Expression(lhs_text.strip(), units)
-        self.__rhs_expr = Expression(rhs_text.strip(), units)
+        self.__variable_tag = variable_tag
+        self.__lhs_expr = Expression(lhs_text.strip(), units, variable_tag)
+        self.__rhs_expr = Expression(rhs_text.strip(), units, variable_tag)
 
     @property
     def lhs(self):
@@ -225,9 +226,81 @@ class Equation:
         return self.__lhs_expr.latex + " = " + self.__rhs_expr.latex
 
     @property
+    def latex_with_units(self):
+        return self.__lhs_expr.latex + " = " + self.__rhs_expr.latex_with_units
+
+    @property
     def latex_with_substitutions(self):
         return (
             self.__lhs_expr.latex_with_substitutions
             + " = "
             + self.__rhs_expr.latex_with_substitutions
         )
+
+    def add_substitution(self, name, val):
+        if name not in self.__lhs_expr.variables + self.__rhs_expr.variables:
+            raise RuntimeError(
+                rf"No variabled named '{name}' found in equation. Is it wrapped with a \{self.__variable_tag}{{}} command"
+            )
+        if name in self.__lhs_expr.variables:
+            self.__lhs_expr.add_substitution(name, val)
+        if name in self.__rhs_expr.variables:
+            self.__rhs_expr.add_substitution(name, val)
+
+    def eval_rhs(self, Q_=None, no_unit_conversions=False):
+        return self.__rhs_expr.eval(Q_, no_unit_conversions)
+
+    def eval_lhs(self, Q_=None, no_unit_conversions=False):
+        return self.__lhs_expr.eval(Q_, no_unit_conversions)
+
+
+class UnphysicalExpression(Expression):
+    """
+    A class representing an unphysical equation, one that is not dimensionally correct.
+
+    There are times were an equation is used to calculate a physical quantitiy, but the equation is not
+    dimensionally correct. For example, the Maximum Permissible Exposure limit for point source, CW visible
+    lasers is given as (Z136.1-2022):
+
+        1.8 t^{0.75} \times 10^{3}  J/cm^2
+
+    To use the equation, the time must be expressed in second, and the numerical value of the result is
+    the MPE expressed in J/cm^2. This is not dimensionally correct, the result woud have units of s^{0.75}.
+
+    To make this dimensionally correct, we would need to use constants, for example
+
+        1.8 \times b \times \left(\frac{t}{\tau}\right)^{0.75} \times 10^{3}
+
+    where a = 1 s and b = 1 J/cm^2.
+
+    But this would clutter up the formula, so it is not done this way.
+
+    When we have an equation like this, we _cannot_ do unit conversions when evaluating the equation.
+    We can only assume that the substitutions are expressed in the correct units and that the resulting
+    numerical value is in the unit assigned to the expression.
+    """
+
+    def eval(self, Q_):
+        return super().eval(Q_, no_unit_conversions=True)
+
+
+class UnphysicalEquation(Equation):
+    def eval_rhs(self, Q_):
+        return super().eval(Q_, no_unit_conversions=True)
+
+    def eval_lhs(self, Q_):
+        return super().eval(Q_, no_unit_conversions=True)
+
+
+def eval_and_show_work_latex(equation, Q_=None):
+    """
+    Return LaTeX of the equation being evaluated with intermediate steps shown.
+    """
+
+    parts = []
+    parts.append(equation.latex)
+    parts.append(equation.rhs.latex_with_substitutions)
+    value = equation.rhs.eval(Q_)
+    parts.append(f"{value:Lx}")
+
+    return " = ".join(parts)
